@@ -1,0 +1,17 @@
+.container.main{
+	margin-top: 6.0em;
+}
+.top{
+	margin-top: 6.0em;
+}
+.top.attached{
+	margin-top:0;
+}
+.top{
+	margin-bottom:2.0em;
+}
+#delete{
+	display:inline;
+}
+
+	
