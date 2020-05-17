@@ -16,13 +16,15 @@ var express			= require("express"),
 var commentRoutes 		=require("./routes/comments"),
 	campgroundRoutes 	=  require("./routes/campgrounds"),
 	indexRoutes 			= require("./routes/index")
-	
+
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
 
-mongoose.connect(process.env.DATABASEURL);
+var database = process.env.DATABASEURL || "mongodb://localhost/yelp_camp_v11";
+
+mongoose.connect(database);
 /*mongoose.connect("mongodb+srv://farzanashampa:11112o18@cluster0-inpqh.mongodb.net/test?retryWrites=true&w=majority"),{
 	useNewUrlParser: true,
 	useCreateIndex: true
@@ -43,10 +45,10 @@ app.use(flash());
 
 /*Campground.create(
 	{
-		name:"Granite Hill", 
+		name:"Granite Hill",
 image:"https://cdn.pixabay.com/photo/2017/06/07/12/59/poland-2380290_1280.jpg",
 		description:"This is a huge granite hill. No bathrooms, no water. Beautiful granite!"
-		
+
 	}, function(err, campground){
 		if(err){
 			console.log("ERROR!!");
@@ -61,7 +63,7 @@ image:"https://cdn.pixabay.com/photo/2017/06/07/12/59/poland-2380290_1280.jpg",
         {name:"Mountain Hill Rest", image:"https://cdn.pixabay.com/photo/2017/06/07/12/59/poland-2380290_1280.jpg"},
         {name:"Granite Hill", image:"https://cdn.pixabay.com/photo/2016/03/30/02/57/camping-1289930_1280.jpg"}
     ];*/
-    
+
 //PASSPORT CONFIGURATION
 app.use(require("express-session")({
 	secret: "Rusty is the cutest dog!!",
@@ -74,18 +76,20 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-app.use(function(req,res,next){		
+app.use(function(req,res,next){
 		res.locals.currentUser= req.user;
 		res.locals.error    = req.flash("error");
 		res.locals.success    = req.flash("success");
 		next();
-		});	
+		});
 
 app.use("/" ,indexRoutes);
 app.use("/campgrounds" ,campgroundRoutes);
 app.use(commentRoutes);
 
 
-app.listen(process.env.PORT, process.env.IP,function(){
+var port = process.env.PORT || 3000;
+
+app.listen(port, process.env.IP,function(){
     console.log("YelpCamp is started!!");
 });
